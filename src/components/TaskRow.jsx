@@ -1,5 +1,6 @@
 import { memo } from "react";
 import { useGlobalProvider } from "../context/GlobalContext";
+import { Link } from "react-router-dom";
 
 function TaskRow() {
 
@@ -12,7 +13,7 @@ function TaskRow() {
     {
       tasks.map(task => (
         <tr key={task.id}>
-          <td>{task.title}</td>
+          <td><Link to={`/task/${task.id}`}>{task.title}</Link></td>
           <td style={{backgroundColor: task.status === "To do" && "red" || task.status === "Doing" && "yellow" || "green"}}>{task.status}</td>
           <td>{task.createdAt}</td>
         </tr>
