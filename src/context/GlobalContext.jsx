@@ -1,26 +1,18 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import useTasks from "../hooks/useTasks";
+import useTasks from "../hooks/useTasks"
 
-// creo il contesto
-const  GlobalContext = createContext();
+/* esporto il GlobalContext */
+export const GlobalContext = createContext()
 
+/* children = tutti le prop condivise dal GlobalProvider */
+export default function GlobalProvider({ children }) {
 
-// provider
-function GlobalProvider({ children }){
-  
-  const { tasks, setTasks, addTask, removeTask, updateTask } = useTasks();
-  
-  return(
-    <GlobalContext.Provider value={{ tasks, setTasks, addTask, removeTask, updateTask }}>
-      {children}
-    </GlobalContext.Provider>
-  );
+/* ho accesso a tutti questi parametri(stati, funzioni) in tutto il progetto, grazie al GlobalProvider */
+const { tasks, setTasks, addTask, removeTask, updateTask } = useTasks()
+
+return (
+  <GlobalContext.Provider value={{ tasks, setTasks, addTask, removeTask, updateTask }}>
+    {children}
+  </GlobalContext.Provider>
+)
 }
-
-// consumo il contesto
-function useGlobalProvider(){
-  const context = useContext(GlobalContext);
-  return context;
-}
-
-export {GlobalProvider, useGlobalProvider}

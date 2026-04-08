@@ -2,8 +2,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import TasksList from "./pages/TasksList"
 import AddTask from "./pages/AddTask"
 import DefaultLayout from "./layouts/DefaultLayout"
-import { GlobalProvider } from "./context/GlobalContext"
 import TaskDetail from "./pages/TaskDetail"
+import GlobalProvider from "./context/GlobalContext"
 
 function App() {
 

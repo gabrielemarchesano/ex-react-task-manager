@@ -23,16 +23,25 @@ export default function useTasks(){
       .then(res => res.json())
       .then(data => {
         if(data.success === true){
-          setTasks(prev => [...prev, newTask]);
+          console.log(data.task)
+          setTasks(prev => [...prev, data.task]);
         } else{
           throw new Error(data.message);
-          
         }
       })
       .catch(err => console.error(err))
   }
 
-  const removeTask = () => {
+  const removeTask = (taskId) => {
+    fetch(`${url}/tasks/${taskId}`, {
+      method: "DELETE"
+    })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success){
+          setTasks(prev => prev.filter(task => task.id !== Number(taskId)))
+        }
+      })
     return;
   }
 

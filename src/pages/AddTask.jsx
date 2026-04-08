@@ -1,12 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useContext, useEffect, useMemo, useRef, useState } from "react"
 import useTasks from "../hooks/useTasks";
+import { GlobalContext } from "../context/GlobalContext";
 
 export default function AddTask(){
 
   const [ title, setTitle ] = useState("");
   const descriptionRef = useRef();
   const statusRef = useRef();
-  const { addTask } = useTasks();
+  const { addTask } = useContext(GlobalContext)
 
   const symbols = "!@#$%^&*()-_=+[]{}|;:'\",.<>?/`~";
 
@@ -22,7 +23,7 @@ export default function AddTask(){
     document.getElementById("add-task-form").reset();
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if(title.trim().length === 0){
@@ -43,12 +44,17 @@ export default function AddTask(){
       Submit del form`, newTask
     )
     
-    addTask(newTask);
-    console.log(addTask)
+    try{
+      await addTask(newTask);
+      console.log(addTask)
     
-    alert("Il task è stato creato");
+      alert("Il task è stato creato");
     
-    resetForm();
+      resetForm();
+    }
+    catch(error){
+      alert(error.message)
+    }
   }
 
   return(
