@@ -1,7 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { GlobalContext } from "../context/GlobalContext";
 import useTasks from "../hooks/useTasks";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import Modal from "../components/Modal";
 
 export default function TaskDetail(){
 
@@ -13,8 +14,15 @@ export default function TaskDetail(){
 
   const selectedTask = tasks.find(task => task.id === Number(id))
   console.log(selectedTask)
+
+  const [ showModal, setShowModal ] = useState(false);
   
   let navigate = useNavigate();
+
+  function showModalFunction(){
+    setShowModal(true)
+    console.log(showModal)
+  }
 
   const handleClick = async () => {
     try{
@@ -34,7 +42,15 @@ export default function TaskDetail(){
       <p>Descrizione: {selectedTask.description}</p>
       <p>Stato: {selectedTask.status}</p>
       <p>Creato il: {selectedTask.createdAt}</p>
-      <button onClick={handleClick}>Elimina task</button>
+      <button onClick={showModalFunction}>Elimina task</button>
+
+      <Modal
+        title={"Sicuro di voler eliminare la task?"}
+        content={selectedTask.title}
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={handleClick}
+      />
     </>
   )
 }
