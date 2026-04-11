@@ -1,31 +1,31 @@
 import { useEffect, useState } from "react";
 
-export default function useTasks(){
-  
-  const [ tasks, setTasks ] = useState([]);
-  
+export default function useTasks() {
+
+  const [tasks, setTasks] = useState([]);
+
   const url = import.meta.env.VITE_URL;
 
   useEffect(() => {
-      fetch(`${url}/tasks`)
-        .then(res => res.json())
-        .then(data => setTasks(data))
-        .catch(err => console.error(err))
-    }, [])
+    fetch(`${url}/tasks`)
+      .then(res => res.json())
+      .then(data => setTasks(data))
+      .catch(err => console.error(err))
+  }, [])
 
   const addTask = (newTask) => {
 
     fetch(`${url}/tasks`, {
       method: "POST",
-      headers: { "Content-Type": "application/json"},
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newTask)
     })
       .then(res => res.json())
       .then(data => {
-        if(data.success === true){
+        if (data.success === true) {
           console.log(data.task)
           setTasks(prev => [...prev, data.task]);
-        } else{
+        } else {
           throw new Error(data.message);
         }
       })
@@ -38,16 +38,32 @@ export default function useTasks(){
     })
       .then(res => res.json())
       .then(data => {
-        if(data.success){
+        if (data.success) {
           setTasks(prev => prev.filter(task => task.id !== Number(taskId)))
         }
       })
     return;
   }
 
-  const updateTask = () => {
+  const updateTask = (updatedTask) => {
+    fetch(`${url}/tasks/${updatedTask.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json", // Diciamo al server che inviamo JSON
+      },
+      body: JSON.stringify(updatedTask)
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setTasks(prev => prev.map(task => task.id === data.task.id ? data.task : task))
+        } else {
+          throw new Error(data.message)
+        }
+      })
+      .catch(error => console.error(error))
     return;
   }
 
-  return({ tasks, setTasks, addTask, removeTask, updateTask});
+  return ({ tasks, setTasks, addTask, removeTask, updateTask });
 }

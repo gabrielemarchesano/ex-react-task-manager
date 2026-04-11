@@ -5,15 +5,16 @@ export default function Modal({
   content,
   show, 
   onClose, 
-  onConfirm
+  onConfirm,
+  confirmText = "Conferma"
 }){
   return show && ReactDOM.createPortal(
     <div>
       <div>
         <h2>{title}</h2>
-        <p>Task: {content}</p>
+        <div><h3>{content}</h3></div>
         <button onClick={onClose}>Annulla</button>
-        <button onClick={onConfirm}>Conferma</button>
+        <button onClick={onConfirm}>{confirmText}</button>
       </div>
     </div>,
     document.body

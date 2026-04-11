@@ -3,25 +3,24 @@ import { GlobalContext } from "../context/GlobalContext";
 import useTasks from "../hooks/useTasks";
 import { useContext, useState } from "react";
 import Modal from "../components/Modal";
+import EditTaskModal from "../components/EditTaskModal";
 
 export default function TaskDetail(){
 
-  const { tasks, removeTask } = useContext(GlobalContext);
-  console.log(tasks)
-  
   const { id } = useParams();
-  //console.log(typeof(id))
+  console.log(typeof(id));
+  const { tasks, removeTask, updateTask } = useContext(GlobalContext);
+  console.log(tasks);
+  
+  const [ showDeleteModal, setShowDeleteModal ] = useState(false);
+  const [ showEditModal, setShowEditModal ] = useState(false);
+  const navigate = useNavigate();
 
-  const selectedTask = tasks.find(task => task.id === Number(id))
+  const selectedTask = tasks?.find(task => task.id === Number(id));
   console.log(selectedTask)
 
-  const [ showModal, setShowModal ] = useState(false);
-  
-  let navigate = useNavigate();
-
-  function showModalFunction(){
-    setShowModal(true)
-    console.log(showModal)
+  if (!selectedTask) {
+    return <h2>Caricamento o Task non trovata...</h2>;
   }
 
   const handleClick = async () => {
@@ -42,14 +41,22 @@ export default function TaskDetail(){
       <p>Descrizione: {selectedTask.description}</p>
       <p>Stato: {selectedTask.status}</p>
       <p>Creato il: {selectedTask.createdAt}</p>
-      <button onClick={showModalFunction}>Elimina task</button>
+      <button onClick={() => setShowDeleteModal(true)}>Elimina task</button>
+      <button onClick={() => setShowEditModal(true)}>Modifica task</button>
 
       <Modal
         title={"Sicuro di voler eliminare la task?"}
         content={selectedTask.title}
-        show={showModal}
-        onClose={() => setShowModal(false)}
+        show={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
         onConfirm={handleClick}
+      />
+      
+      <EditTaskModal 
+        show={showEditModal} 
+        onClose={() => setShowEditModal(false)}
+        task={selectedTask}
+        onSave={updateTask}
       />
     </>
   )
